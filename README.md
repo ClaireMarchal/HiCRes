@@ -72,36 +72,25 @@ This script takes in input a tab delimited file containing 9 data points (see be
 
 The input is the 20th percentile value for three sample sizes (20M and 2 values > 20M read pairs) and three window sizes (20kb, 50kb, 100kb). It  must have these columns, with headers:
 
-column 1, "SizeRaw": This column is not used by this program
-
-column 2, "SizeU": The number of read pairs. It must have one and only one sample containing 20000000 reads or less (try to get close to this number). And at least two samples with more read pairs.
-
-column 3, "Window": The window size used to calculate the read distribution in bp. It must include 20000 for each sample size and at least 2 other size larger than 20000bp (e.g. 50000 and 100000)
-
-column 4, "Perc_20th": The 20th percentile of the distribution of these reads 
+- column 1, "SizeRaw": This column is not used by this program
+- column 2, "SizeU": The number of read pairs. It must have one and only one sample containing 20000000 reads or less (try to get close to this number). And at least two samples with more read pairs.
+- column 3, "Window": The window size used to calculate the read distribution in bp. It must include 20000 for each sample size and at least 2 other size larger than 20000bp (e.g. 50000 and 100000)
+- column 4, "Perc_20th": The 20th percentile of the distribution of these reads 
 
 
 example of input file:
 
-SizeRaw	SizeU	 Window	Perc_20th
-
-NA	19387136	20000	132
-
-NA	42006016	20000	290
-
-NA	64622583	20000	447
-
-NA	19387136	50000	346
-
-NA	42006016	50000	753
-
-NA	64622583	50000	1159
-
-NA	19387136	100000	700
-
-NA	42006016	100000	1522
-
-NA	64622583	100000	2342
+| SizeRaw | SizeU | Window | Perc_20th |
+| :-----: | :---: | :----: | :-------: |
+| NA | 19387136 | 20000 | 132 |
+| NA | 42006016 | 20000 | 290 |
+| NA | 64622583 | 20000 | 447 |
+| NA | 19387136 | 50000 | 346 |
+| NA | 42006016 | 50000 | 753 |
+| NA | 64622583 | 50000 | 1159 |
+| NA | 19387136 | 100000 | 700 |
+| NA | 42006016 | 100000 | 1522 |
+| NA | 64622583 | 100000 | 2342 |
 
 ## Troubleshooting
 
