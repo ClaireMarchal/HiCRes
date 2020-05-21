@@ -11,7 +11,7 @@ The purpose of this container is to estimate the resolution of your HiC library 
 
 ### Using docker
 
-To start from fastq files, use
+#### Starting from fastq files
 
 `docker run --rm -v /Path/To/Your/Fastq/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
 
@@ -19,7 +19,7 @@ This command will run hicres on your library "sample", using human genome, MboI 
 
 Tip: You can start from a subsampled library (100M read pairs) for faster results.
 
-To start from bam of valid interactions, use
+#### Starting from bam of valid interactions
 
 `docker run --rm -v /Path/To/Your/Files/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
 
