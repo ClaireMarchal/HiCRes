@@ -6,6 +6,7 @@ Estimating and predicting HiC library resolution
 
 The purpose of this container is to estimate the resolution of your HiC library and to predict the resolution the same library will reach when sequenced at deeper level. There are two main functionality to use HiCRes: you can either start from your analyzed library by providing a bam file containing the valid read pairs and the genome index you used (much faster option) or you can start from your raw sequencing data by providing the 2 fastq files, the enzyme you used, and the species (much slower, limited to human and mouse for now, and MboI, HindIII or Arima digestions).
 
+
 ## Quick start
 
 ### Using docker
@@ -15,6 +16,8 @@ To start from fastq files, use
 `docker run --rm -v /Path/To/Your/Fastq/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
 
 This command will run hicres on your library "sample", using human genome, MboI digestion and using 40 threads. It will look for your fastq files within /Path/To/Your/Fastq/Folder and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
+
+Tip: You can start from a subsampled library (100M read pairs) for faster results.
 
 To start from bam of valid interactions, use
 
@@ -32,30 +35,36 @@ Will come soon.
 
 Arguments:
 
--m, --method [raw,bam,raw_fast,bam_fast]     The method raw starts from fastq files and output the resolution of the library versus the number of read pairs sequenced. The fast versions of each of these options (raw_fast and bam_fast) are in beta mode. See the Fast modes section bellow for more information.
+-m, --method [raw,bam,bam_fast]     The method raw starts from fastq files and output the resolution of the library versus the number of read pairs sequenced. The fast version of the bam option (bam_fast) is in beta mode. See the Fast modes section bellow for more information.
 
 -s, --species [hg38,mm10]     The species (genome name) from which the sample comes from. Either hg38 for human or mm10 for mouse. This is required for method raw and is ignored for method bam.
 
 -e, --enzyme [HindIII,MboI,Arima]     The restriction digestion method, either HindIII for HindIII digestion, MboI for MboI digestion or Arima, for the Arima kit. This is required for method raw and is ignored for method bam.
 
--c, --chromsize <path to file>     The path to index of the genome used to anaylze the HiC, for method bam only.
+-c, --chromsize <path to file>     The path to index of the genome used to anaylze the HiC, for method bam and bam_fast only.
 
 -1, --fastq_1 <path to file>     The path to the first end of the sequenced reads, in fastq or fastq.gz format. For method raw only.
 
 -2, --fastq_2 <path to file>     The path to the second end of the sequenced reads, in fastq or fastq.gz format. For method raw only.
 
--b, --bam <path to file>     The path to bam file of the valid read pairs, for method bam only.
+-b, --bam <path to file>     The path to bam file of the valid read pairs, for method bam and bam_fast only.
 
 -t, --threads <int>     The number of threads to use. Default is 1.
 
-## Fast modes
+## Fast mode
 
-On normal mode, HiCRes tries to keep the paired-end imformation from the valid interactions and subsamples the datasets keeping the read pairs together. Fast modes ignore the pairing of the valid interactions, resulting in a faster execution. Neverless, this a beta mode, since all the tests performed to check the accuracy of this tool have been done using normal mode. You should be cautious using these modes.
-To use these modes, use methods "raw_fast" instead of "raw" and "bam_fast" instead of "bam."
+On normal mode, HiCRes tries to keep the paired-end imformation from the valid interactions and subsamples the datasets keeping the read pairs together. Fast mode ignores the pairing of the valid interactions, resulting in a faster execution. Neverless, this a beta mode, since all the tests performed to check the accuracy of this tool have been done using normal mode. You should be cautious using this mode.
+To use this mode, use method "bam_fast" instead of "bam."
 
 ## Using individual sub-programs
 
-This tool is composed of several bash and R scripts. Among these last, two scripts within the folder scriptsR may be of interest for users who do not want to run the docker.
+This tool is composed of several bash and R scripts. Some may be of interest for users who do not want to run the docker.
+
+### script_raw.sh
+
+
+### script_bam.sh and script_bam_fast.sh
+
 
 ### script_20th_perc.R
 
