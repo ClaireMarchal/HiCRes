@@ -29,20 +29,20 @@ This command will run hicres on bam file located in /Path/To/Your/Files/Folder a
 
 #### Starting from fastq files
 
-`singularity exec --bind /Path/To/Your/Fastq/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
+`singularity run --bind /Path/To/Your/Fastq/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
 This command will run hicres on your library "sample", using human genome, MboI digestion and using 40 threads. It will look for your fastq files within /Path/To/Your/Fastq/Folder and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
 
 Tip: You can start from a subsampled library (100M read pairs) for faster results.
 
 #### Starting from bam of valid interactions
 
-`singularity exec --bind /Path/To/Your/Files/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
+`singularity run --bind /Path/To/Your/Files/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
 
 This command will run hicres on bam file located in /Path/To/Your/Files/Folder and will look for the chrom.sizes file corresponding to the genome you used within /Path/To/Your/Files/Folder. It will use 40 threads and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
 
 ## Usage
 
-`hicres -m [raw,bam] [options]`
+`hicres -m [raw,bam,bam_fast] [options]`
 
 Arguments:
 
@@ -68,7 +68,7 @@ On normal mode, HiCRes tries to keep the paired-end imformation from the valid i
 
 To use this mode, use method "bam_fast" instead of "bam."
 
-## Using individual sub-programs
+## Using individual sub-programs (ongoing section)
 
 This tool is composed of several bash and R scripts. Some may be of interest for users who do not want to run the docker.
 
@@ -147,9 +147,9 @@ There are several steps that require sorting of big files, using the function so
 
 - "Error: no prediction computed."
 
-This error occurs either if the equation.txt file has not been generated (unkown error), or if the equation has not been predicted (most likely). In this second case, an equation.txt file should be present in the output directory, which will contani the error instead of the fiinial equation. The error is the absence of linearity of the distribution of the mapped reads in function of the read number or in function of the windows size (specified in the equation.txt file). The linearity of the distribution is the main condition to extract the equation to predict the resolution of the library in function of the depth. Thus, if the distribution is not linear, it unfortunately impossible to make any prediction. Trying with a deeper starting liibrary may improve that.
+This error occurs either if the equation.txt file has not been generated (unkown error), or if the equation has not been predicted (most likely). In this second case, an equation.txt file should be present in the output directory, containing the error details instead of the final equation. The error is the absence of linearity of the distribution of the mapped reads in function of the read number or in function of the windows size (specified in the equation.txt file). This will happen if you mixed several libraries together. This tool cannot process several libraries. The linearity of the distribution is the main condition to extract the equation to predict the resolution of the library in function of the depth. Thus, if the distribution is not linear, it unfortunately impossible to make any prediction. If you are analysing a single library, trying to start with a deeper library may improve that.
 
-## Benchmarking
+## Benchmarking (ongoing section)
 
 Below are the times needed to process HiC data using the raw method (starting from fastq files). This times have been measured using singularity on an HPC server, allocating 40 cpus. 
 
