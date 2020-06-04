@@ -115,39 +115,39 @@ example of input file:
 
 ## Troubleshooting
 
-"Error: too low  percentage of reads mapped"
+- "Error: too low  percentage of reads mapped"
 
 This error is issued if less than 50%  of the read pairs are mapped. In this case, it is likely that there is a problem. Check if you selected the correct species. If you selected the correct species, several problems are possible:
 
-- The fastq have not only read pairs: if you pre-processed the fastq to remove adpaters for example, make sure the final fastq files contains read pairs only, both file in  the same order. These files will be splitted to use use multiple cpus. Thus, if the read pairs are not in the  same order, they will be proccessed separetly and will not be paired after the mapping.
+     - The fastq have not only read pairs: if you pre-processed the fastq to remove adpaters for example, make sure the final fastq files contains read pairs only, both file in  the same order. These files will be splitted to use use multiple cpus. Thus, if the read pairs are not in the  same order, they will be proccessed separetly and will not be paired after the mapping.
 
-- There is a contamination of adapters in the fastq. Adapters are not removed before  processing. Thus, if you have a contaminatioin, it is possible that you loose too many reads. In this case clip the adpters before usinig HiCRes, and make sure to keep only read pairs, in the same order ni both fastq files.
+     - There is a contamination of adapters in the fastq. Adapters are not removed before  processing. Thus, if you have a contaminatioin, it is possible that you loose too many reads. In this case clip the adpters before usinig HiCRes, and make sure to keep only read pairs, in the same order ni both fastq files.
 
-- There is a contamination with another species. If your samples are contaminated (by mixing bymistake to samples with the same index for example), your samples are not usable. You can seperate the species by mapping on chimeric genome your reads and selecting the one mapping on your genome of interest, but this solution is for troubleshouting only, and not recommanded to perform further analysis as you  have a risk to introduce a bias in your data.
+     - There is a contamination with another species. If your samples are contaminated (by mixing bymistake to samples with the same index for example), your samples are not usable. You can seperate the species by mapping on chimeric genome your reads and selecting the one mapping on your genome of interest, but this solution is for troubleshooting only, and not recommanded to perform further analysis as you  have a risk to introduce a bias in your data.
 
-"Warning: low percentage of valid interactions" and "Warning: low proportioin of cis interactions."
+- "Warning: low percentage of valid interactions" and "Warning: low proportioin of cis interactions."
 
 In both cases, this indicates a poor quality for the library. HiCRes will still compute the resolution, but it is recommended to try to improve the experimental conditions before sequencing deeper. In the case of low cis interactions proportion, iit is especially important to work with the resolution computed from cis interactions only.
 
-"Error: preseq failed"
+- "Error: preseq failed"
 
 This should be preceded by preseq error message. Use this message for refering to preseq documentation if you want to understand why preseq failed. When preseq fails, the library yields in function of the sequencing depth cannot be predicted. In this case, HiCRes will issue a warning and predict the resolution in function of the unique valid read pairs sequenced, instead of the toatl number of the  total number of read pairs sequenced (including duplicates).
 
-"Error: too low number of mapped reads in the library."
+- "Error: too low number of mapped reads in the library."
 
 HiCRes has been succesfuly tested to work with datasets having as low as 30M valid read pairs. If your dataset is smaller, HiCRes will not process it as we don't know how accurate this will be.
 
-"Error while generating the tag files." and "Error: bedtools failed."
+- "Error while generating the tag files." and "Error: bedtools failed."
 
 This error is likely caused by  bedtools not workinig properly. If you get this error while running HiCRes on processed data, make sure the genome index (.chrom.sizes file) you gave to HiCRes corresponds to genome used to process the data.
 
-"Error: sorting failed."
+- "Error: sorting failed."
 
 There are several steps that require sorting of big files, using the function sort. It has been configured to use a temporary folder created in the output directory. This error could be caused by a lack of memory in this directory.
 
-"Error: no prediction computed."
+- "Error: no prediction computed."
 
-This error occurs either if the equation.txt file has not been generated (unkown error), or if the equation has not been predicted (most likely). In this second case, an equation.txt file should be present in the output directory, which will contani the error instead of the fiinial equation. The error is the absence of linearity of the distribution of the mapped reads in function of the read number or ini function of the winidows size. The linearity is the main condition to extract the equation to predict the resolution of the library in function of the depth. Thus, if the distribution is not linear, it unfortunately impossible to make any prediction. Trying with a deeper starting liibrary may improve that.
+This error occurs either if the equation.txt file has not been generated (unkown error), or if the equation has not been predicted (most likely). In this second case, an equation.txt file should be present in the output directory, which will contani the error instead of the fiinial equation. The error is the absence of linearity of the distribution of the mapped reads in function of the read number or in function of the windows size (specified in the equation.txt file). The linearity of the distribution is the main condition to extract the equation to predict the resolution of the library in function of the depth. Thus, if the distribution is not linear, it unfortunately impossible to make any prediction. Trying with a deeper starting liibrary may improve that.
 
 ## Benchmarking
 
@@ -157,7 +157,7 @@ Below are the times needed to process HiC data using the raw method (starting fr
 | :-----: | :---------------: | :-----: | :----: | :--: | :--------: |
 | SRR1658692 | 274M | Human | HindIII | 5h12m<sup>1</sup> | |
 | SRR1658573<sup>2</sup> | 161M | Human | MboI | 4h55m | |
-| SRR443883\nSRR443884\nSRR443885 | 465M | Mouse | HindIII | 4h36m | |
+| SRR443883 SRR443884 SRR443885 | 465M | Mouse | HindIII | 4h36m | |
 | SRR9906313<sup>2</sup> | 270M | Mouse | MboI | 6h53m | |
 | Unpublished | 195M | Mouse | Arima | 5h14m | |
 
@@ -172,7 +172,7 @@ Below are the times needed to process HiC data	using the bam and bam_fast method
 | :------: | :-----------------------: | :-----: | :--------: | :--------------: | :-------------: | :-------------------: |
 | SRR1658692 | 165M | Human | 44m<sup>1</sup> | | 22m | |
 | SRR1658573 | 105M | Human | 25m | | 15m | |
-| SRR443883\nSRR443884\nSRR443885 | 145M | Mouse | 29m | | 19m | |
+| SRR443883 SRR443884 SRR443885 | 145M | Mouse | 29m | | 19m | |
 | SRR9906313 | 183M | Mouse | error | | 26m | |
 | Unpublished | 120M | Mouse | 29m | | 16m | |
 
@@ -191,4 +191,3 @@ This tool uses also:
 - HiCUP: HiCUP: pipeline for mapping and processing Hi-C data. F1000Res 4, 1310 (2015).
 - preseq: Daley, T. & Smith, A.D. Predicting the molecular complexity of sequencing libraries. Nat Methods 10, 325-327 (2013).
 - R: R Core Team (2013). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.
-- parallel: https://doi.org/10.5281/zenodo.1146014
