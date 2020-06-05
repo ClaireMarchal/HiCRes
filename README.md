@@ -157,11 +157,11 @@ Below are the processing times of HiC data using the raw method (starting from f
 
 | Dataset | Size (read pairs) | Species | Enzyme | Time | Resolution |
 | :-----: | :---------------: | :-----: | :----: | :--: | :--------: |
-| SRR1658692 | 274M | Human | HindIII | |  |
-| SRR1658573<sup>1</sup> | 161M | Human | MboI |  |  |
-| SRR443883 SRR443884 SRR443885 | 465M | Mouse | HindIII |  |  |
-| SRR9906313<sup>1</sup> | 270M | Mouse | MboI |  |  |
-| Unpublished | 195M | Mouse | Arima |  |  |
+| SRR1658692 | 274M | Human | HindIII | 4h53m | 26883 bp |
+| SRR1658573<sup>1</sup> | 161M | Human | MboI | 4h48m | 24744 bp |
+| SRR443883 SRR443884 SRR443885 | 465M | Mouse | HindIII | 4h21m | 22346 bp |
+| SRR9906313<sup>1</sup> | 270M | Mouse | MboI | 6h32 | 17764 bp |
+| Unpublished | 195M | Mouse | Arima | 5h | 15661 bp |
 
 1. Prediction for the library yields (duplicates) failed. In this case, HiCRes gives a warning and generates the predictions on the uniquely sequenced read pairs.
 
