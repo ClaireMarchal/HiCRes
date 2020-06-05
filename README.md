@@ -170,11 +170,11 @@ Below are the processing times of HiC data using the bam and bam_fast method (st
 
 | Datasets | Size (valid interactions) | Species | Time "bam" | Resolution "bam" | Time "bam_fast" | Resolution "bam_fast" |
 | :------: | :-----------------------: | :-----: | :--------: | :--------------: | :-------------: | :-------------------: |
-| SRR1658692 | 165M | Human | m |  bp | m |  bp |
-| SRR1658573 | 105M | Human | m |  bp | m |  bp |
-| SRR443883 SRR443884 SRR443885 | 145M | Mouse | m |  bp | m |  bp |
-| SRR9906313 | 183M | Mouse | m |  bp | m |  bp |
-| Unpublished | 120M | Mouse | m |  bp | m |  bp|
+| SRR1658692 | 165M | Human | 36m | 26896 bp | 22m | 26244 bp |
+| SRR1658573 | 105M | Human | 25m | 24746 bp | 15m | 24330 bp |
+| SRR443883 SRR443884 SRR443885 | 145M | Mouse | 29m | 22356 bp | 19m | 20497 bp |
+| SRR9906313 | 183M | Mouse | 39m | 17739 bp | 24m | 16490 bp |
+| Unpublished | 120M | Mouse | 29m | 15685 bp | 16m | 15568 bp|
 
 
 ## References
