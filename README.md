@@ -151,32 +151,31 @@ This error occurs either if the equation.txt file has not been generated (unkown
 
 ## Benchmarking (ongoing section)
 
-Below are the times needed to process HiC data using the raw method (starting from fastq files). This times have been measured using singularity on an HPC server, allocating 40 cpus. 
+Pulling the docker using singularity can take around 25 minutes.
+ 
+Below are the processing times of HiC data using the raw method (starting from fastq files). This times have been measured using singularity on an HPC server, allocating 40 cpus. 
 
 | Dataset | Size (read pairs) | Species | Enzyme | Time | Resolution |
 | :-----: | :---------------: | :-----: | :----: | :--: | :--------: |
-| SRR1658692 | 274M | Human | HindIII | 5h12m<sup>1</sup> | |
-| SRR1658573<sup>2</sup> | 161M | Human | MboI | 4h55m | |
-| SRR443883 SRR443884 SRR443885 | 465M | Mouse | HindIII | 4h36m | |
-| SRR9906313<sup>2</sup> | 270M | Mouse | MboI | 6h53m | |
-| Unpublished | 195M | Mouse | Arima | 5h14m | |
+| SRR1658692 | 274M | Human | HindIII | |  |
+| SRR1658573<sup>1</sup> | 161M | Human | MboI |  |  |
+| SRR443883 SRR443884 SRR443885 | 465M | Mouse | HindIII |  |  |
+| SRR9906313<sup>1</sup> | 270M | Mouse | MboI |  |  |
+| Unpublished | 195M | Mouse | Arima |  |  |
 
-1. Including the time to pull the docker from dockerhub.
-
-2. Prediction for the library yields (duplicates) failed. In this case, HiCRes gives a warning and generates the predictions on the uniquely sequenced read pairs.
+1. Prediction for the library yields (duplicates) failed. In this case, HiCRes gives a warning and generates the predictions on the uniquely sequenced read pairs.
 
 
-Below are the times needed to process HiC data	using the bam and bam_fast method (starting from bam files containing valid interactions). This times have been measured using singularity on an HPC server, allocating 40 cpus.
+Below are the processing times of HiC data using the bam and bam_fast method (starting from bam files containing valid interactions). This times have been measured using singularity on an HPC server, allocating 40 cpus.
 
 | Datasets | Size (valid interactions) | Species | Time "bam" | Resolution "bam" | Time "bam_fast" | Resolution "bam_fast" |
 | :------: | :-----------------------: | :-----: | :--------: | :--------------: | :-------------: | :-------------------: |
-| SRR1658692 | 165M | Human | 44m<sup>1</sup> | | 22m | |
-| SRR1658573 | 105M | Human | 25m | | 15m | |
-| SRR443883 SRR443884 SRR443885 | 145M | Mouse | 29m | | 19m | |
-| SRR9906313 | 183M | Mouse | error | | 26m | |
-| Unpublished | 120M | Mouse | 29m | | 16m | |
+| SRR1658692 | 165M | Human | m |  bp | m |  bp |
+| SRR1658573 | 105M | Human | m |  bp | m |  bp |
+| SRR443883 SRR443884 SRR443885 | 145M | Mouse | m |  bp | m |  bp |
+| SRR9906313 | 183M | Mouse | m |  bp | m |  bp |
+| Unpublished | 120M | Mouse | m |  bp | m |  bp|
 
-1. Including the time to pull the docker from dockerhub.
 
 ## References
 
