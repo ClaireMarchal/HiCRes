@@ -177,6 +177,55 @@ Below are the processing times of HiC data using the bam and bam_fast method (st
 | Unpublished | 120M | Mouse | 29m | 15685 bp | 16m | 15568 bp|
 
 
+## Docker
+
+You can build HiCres docker from scratch using this repository and the Dockerfile provided here. Nevertheless, GitHUB does not accept heavy files. Thus the genomes files will need to added manually before building the folder, following this architecture:
+
+HiCRes/Genomes/hg38:
+
+Digest_hg38_DpnII_Arima.txt
+
+Digest_hg38_HindIII.txt
+
+Digest_hg38_MboI.txt
+
+hg38.1.bt2
+
+hg38.2.bt2
+
+hg38.3.bt2
+
+hg38.4.bt2
+
+hg38.chrom.sizes
+
+hg38.rev.1.bt2
+
+hg38.rev.2.bt2
+
+
+HiCRes/Genomes/mm10:
+
+Digest_mm10_DpnII_Arima.txt
+
+Digest_mm10_HindIII.txt
+
+Digest_mm10_MboI.txt
+
+mm10.1.bt2
+
+mm10.2.bt2
+
+mm10.3.bt2
+
+mm10.4.bt2
+
+mm10.chrom.sizes
+
+mm10.rev.1.bt2
+
+mm10.rev.2.bt2
+
 ## References
 
 Please cite the paper associated to this tool if you use it:
