@@ -205,7 +205,7 @@ n=`cat all_count.txt`
 if (( $n<30000000 )); then
     >&2 echo "Error, too low number of mapped reads in the library."
     rm -r $tmp
-    rm -t $workdir
+    rm -r $workdir
     exit 1
 fi
 
