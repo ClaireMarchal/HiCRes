@@ -4,7 +4,7 @@ Estimating and predicting HiC library resolution
 
 ## Introduction
 
-The purpose of this container is to estimate the resolution of your HiC library and to predict the resolution the same library will reach when sequenced at deeper level. There are two main functionality to use HiCRes: you can either start from your analyzed library by providing a bam file containing the valid read pairs and the genome index you used (much faster option) or you can start from your raw sequencing data by providing the 2 fastq files, the enzyme you used, and the species (much slower, limited to human and mouse for now, and MboI, HindIII or Arima digestions).
+The purpose of this container is to estimate the resolution of your HiC library and to predict the resolution the same library will reach when sequenced at deeper level. There are two main functionality to use HiCRes: you can either start from your analyzed library by providing a bam file containing the valid read pairs and the genome index you used (much faster option) or you can start from your raw sequencing data by providing the 2 fastq files, the enzyme you used, and the species (much slower, limited to human, mouse, A. thaliana, C. elegans and D. melanogaster, and MboI, HindIII or Arima digestions).
 
 
 ## Quick start
@@ -48,7 +48,7 @@ Arguments:
 
 -m, --method [raw,bam,bam_fast]     The method raw starts from fastq files and output the resolution of the library versus the number of read pairs sequenced. The fast version of the bam option (bam_fast) is in beta mode. See the Fast modes section bellow for more information.
 
--s, --species [hg38,mm10]     The species (genome name) from which the sample comes from. Either hg38 for human or mm10 for mouse. This is required for method raw and is ignored for method bam.
+-s, --species [hg38,mm10,TAIR10,ce10,dm3]     The species (genome name) from which the sample comes from. Either hg38 for human, mm10 for mouse, TAIR10 for A. thaliana, ce10 for C. elegans or dm3 for D. melanogaster. This is required for method raw and is ignored for method bam.
 
 -e, --enzyme [HindIII,MboI,Arima]     The restriction digestion method, either HindIII for HindIII digestion, MboI for MboI digestion or Arima, for the Arima kit. This is required for method raw and is ignored for method bam.
 
@@ -74,9 +74,19 @@ This tool is composed of several bash and R scripts. Some may be of interest for
 
 ### script_raw.sh
 
+usage: `./script_raw.sh genome threads enzyme reads_R1.fastq reads_R2.fastq`
+
+Using the nomenclature described in the "Usage" section.
+
+It will run a bash script to predict the resolution from fastq files.
 
 ### script_bam.sh and script_bam_fast.sh
 
+usage: `./script_bam.sh $species $processors $bam $chromsize`
+
+Using the nomenclature described in the "Usage" section.
+
+It will run a bash script to predict the resolution from fastq files.
 
 ### script_20th_perc.R
 
@@ -89,12 +99,12 @@ This is script is used within the docker to output the 20th percentiles of the v
 
 usage: `Rscript path/to/script_equa.R input_20th_percentiles.txt output_equation.txt`
 
-This script takes in input a tab delimited file containing 9 data points (see bellow), and output a text file containing the equation to calculate the resolution of the HiC library for any valid reads number. This script check for the linearity between the 20th percentile of the read pairs distribution and the window size and for the linearity between the 20th percentile of the read pairs distribution and the sample size (number of valid read pairs). In case of non-linearity, the output file will contain only an error message. 
+This script takes in input a tab delimited file containing 9 data points (see bellow), and output a text file containing the equation to calculate the resolution of the HiC library for any valid reads number. This script check for the linearity between the cube root of  20th percentile of the read pairs distribution and the cube root of the window size and for the linearity between the cube root of the 20th percentile of the read pairs distribution and the cube root of the sample size (number of valid read pairs). In case of non-linearity, the output file will contain only an error message. 
 
-The input is the 20th percentile value for three sample sizes (20M and 2 values > 20M read pairs) and three window sizes (20kb, 50kb, 100kb). It  must have these columns, with headers:
+The input is the 20th percentile value for three sample sizes and three window sizes (20kb, 50kb, 100kb). It  must have these columns, with headers:
 
 - column 1, "SizeRaw": This column is not used by this program
-- column 2, "SizeU": The number of read pairs. It must have one and only one sample containing 20000000 reads or less (try to get close to this number). And at least two samples with more read pairs.
+- column 2, "SizeU": The number of read pairs. 
 - column 3, "Window": The window size used to calculate the read distribution in bp. It must include 20000 for each sample size and at least 2 other size larger than 20000bp (e.g. 50000 and 100000)
 - column 4, "Perc_20th": The 20th percentile of the distribution of these reads 
 
@@ -127,19 +137,16 @@ This error is issued if less than 50%  of the read pairs are mapped. In this cas
 
 - "Warning: low percentage of valid interactions" and "Warning: low proportioin of cis interactions."
 
-In both cases, this indicates a poor quality for the library. HiCRes will still compute the resolution, but it is recommended to try to improve the experimental conditions before sequencing deeper. In the case of low cis interactions proportion, iit is especially important to work with the resolution computed from cis interactions only.
+In both cases, this indicates a poor quality for the library. HiCRes will still compute the resolution, but it is recommended to try to improve the experimental conditions before sequencing deeper. In the case of low cis interactions proportion, it is especially important to work with the resolution computed from cis or cis-far interactions only.
 
 - "Error: preseq failed"
 
 This should be preceded by preseq error message. Use this message for refering to preseq documentation if you want to understand why preseq failed. When preseq fails, the library yields in function of the sequencing depth cannot be predicted. In this case, HiCRes will issue a warning and predict the resolution in function of the unique valid read pairs sequenced, instead of the toatl number of the  total number of read pairs sequenced (including duplicates).
 
-- "Error: too low number of mapped reads in the library."
-
-HiCRes has been succesfuly tested to work with datasets having as low as 30M valid read pairs. If your dataset is smaller, HiCRes will not process it as we don't know how accurate this will be.
 
 - "Error while generating the tag files." and "Error: bedtools failed."
 
-This error is likely caused by  bedtools not workinig properly. If you get this error while running HiCRes on processed data, make sure the genome index (.chrom.sizes file) you gave to HiCRes corresponds to genome used to process the data.
+This error is likely caused by bedtools not workinig properly. If you get this error while running HiCRes on processed data, make sure the genome index (.chrom.sizes file) you gave to HiCRes corresponds to genome used to process the data.
 
 - "Error: sorting failed."
 
@@ -147,11 +154,11 @@ There are several steps that require sorting of big files, using the function so
 
 - "Error: no prediction computed."
 
-This error occurs either if the equation.txt file has not been generated (unkown error), or if the equation has not been predicted (most likely). In this second case, an equation.txt file should be present in the output directory, containing the error details instead of the final equation. The error is the absence of linearity of the distribution of the mapped reads in function of the read number or in function of the windows size (specified in the equation.txt file). This will happen if you mixed several libraries together. This tool cannot process several libraries. The linearity of the distribution is the main condition to extract the equation to predict the resolution of the library in function of the depth. Thus, if the distribution is not linear, it unfortunately impossible to make any prediction. If you are analysing a single library, trying to start with a deeper library may improve that.
+This error occurs either if the equation.txt file has not been generated (unkown error), or if the equation has not been predicted (most likely). In this second case, an equation.txt file should be present in the output directory, containing the error details instead of the final equation. The error is the absence of linearity of the cube root of the distribution of the mapped reads in function of the cube root of the read number or in function of the cube root of the windows size (specified in the equation.txt file). This may happen if you mixed several libraries together. This tool cannot process several libraries. The linearity of the distribution is the main condition to extract the equation to predict the resolution of the library in function of the depth. Thus, if the distribution is not linear, it is unfortunately impossible to make any prediction. If you are analysing a single library, trying to start with a deeper library may improve that.
 
-## Benchmarking (ongoing section)
+## Benchmarking
 
-Pulling the docker using singularity can take around 25 minutes.
+Pulling the docker using singularity for the first time can take around 25 minutes.
  
 Below are the processing times of HiC data using the raw method (starting from fastq files). This times have been measured using singularity on an HPC server, allocating 40 cpus. 
 
@@ -179,7 +186,7 @@ Below are the processing times of HiC data using the bam and bam_fast method (st
 
 ## Docker
 
-You can build HiCres docker from scratch using this repository and the Dockerfile provided here. Nevertheless, GitHUB does not accept heavy files. Thus the genomes files will need to added manually before building the folder, following this architecture:
+You can build HiCres docker from scratch using this repository and the Dockerfile provided here. Nevertheless, GitHUB does not accept heavy files. Thus the genomes files will need to added manually before building the folder, following this architecture (you can add only the folders containing your genomes of interest):
 
 HiCRes/Genomes/hg38:
 
@@ -225,6 +232,75 @@ mm10.chrom.sizes
 mm10.rev.1.bt2
 
 mm10.rev.2.bt2
+
+
+HiCRes/Genomes/TAIR10:
+
+Digest_TAIR10_DpnII_Arima.txt
+
+Digest_TAIR10_HindIII.txt
+
+Digest_TAIR10_MboI.txt
+
+TAIR10.1.bt2
+
+TAIR10.2.bt2
+
+TAIR10.3.bt2
+
+TAIR10.4.bt2
+
+TAIR10.chrom.sizes
+
+TAIR10.rev.1.bt2
+
+TAIR10.rev.2.bt2
+
+
+HiCRes/Genomes/dm3:
+
+Digest_dm3_DpnII_Arima.txt
+
+Digest_dm3_HindIII.txt
+
+Digest_dm3_MboI.txt
+
+dm3.1.bt2
+
+dm3.2.bt2
+
+dm3.3.bt2
+
+dm3.4.bt2
+
+dm3.chrom.sizes
+
+dm3.rev.1.bt2
+
+dm3.rev.2.bt2
+
+
+HiCRes/Genomes/ce10:
+
+Digest_ce10_DpnII_Arima.txt
+
+Digest_ce10_HindIII.txt
+
+Digest_ce10_MboI.txt
+
+ce10.1.bt2
+
+ce10.2.bt2
+
+ce10.3.bt2
+
+ce10.4.bt2
+
+ce10.chrom.sizes
+
+ce10.rev.1.bt2
+
+ce10.rev.2.bt2
 
 ## References
 

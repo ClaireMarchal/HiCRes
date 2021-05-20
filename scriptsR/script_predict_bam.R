@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)!=5) {
-  stop("9 arguments must be supplied: a b c d output_file", call.=FALSE)
+  stop("5 arguments must be supplied: a b c d output_file", call.=FALSE)
 }
 
 options(scipen = 999)
@@ -14,7 +14,7 @@ preseqout<-data.frame(Valid_Reads=matrix(rep(NA,999),ncol=1))
 n=0; for(i in seq(1000000, 1000000000, 1000000)){preseqout[n,1]<-i; n=n+1}
 
 # Calculating predicted resolution
-preseqout$Predicted_Resolution<-(1000-coefequa[4]-coefequa[3]*preseqout$Valid_Reads)/(coefequa[1]*preseqout$Valid_Reads+coefequa[2])
+preseqout$Predicted_Resolution<-(((1000)^(1/3) - coefequa[4] - coefequa[3] * (preseqout$Valid_Reads)^(1/3)) / (coefequa[1] * (preseqout$Valid_Reads)^(1/3) + coefequa[2]))^3
 
 # Removing bad lines:
 preseqout[preseqout<=0]<-NA

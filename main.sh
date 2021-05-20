@@ -34,7 +34,7 @@ hicres -m [raw,bam] [options]\n\
 \n\
 Arguments:\n\
 -m, --method [raw,bam,bam_fast]\t The method raw starts from fastq files and output the resolution of the library versus the number of read pairs sequenced. The fast version of the bam option (bam_fast) is in beta mode. See the GitHub page http://github.com/ClaireMarchal/HiCRes for more information. (required)\n\
--s, --species [hg38,mm10]\t The species (genome name) from which the sample comes from. Either hg38 for human or mm10 for mouse. This is required for method raw and is ignored for method bam.\n\
+-s, --species [hg38,mm10,ce10,dm3,TAIR10]\t The species (genome name) from which the sample comes from. Either hg38 for human, mm10 for mouse, ce10 for C. elegans, TAIR10 for A. thaliana or dm3 for D. melanogaster. This is required for method raw and is ignored for method bam.\n\
 -e, --enzyme [HindIII,MboI,Arima]\t The restriction digestion method, either HindIII for HindIII digestion, MboI for MboI digestion or Arima, for the Arima kit. This is required for method raw and is ignored for method bam.\n\
 -c, --chromsize <path to file>\t The path to index of the genome used to anaylze the HiC, for method bam only.\n\
 -1, --fastq_1 <path to file>\t The path to the first end of the sequenced reads, in fastq or fastq.gz format. For method raw only.\n\
@@ -99,8 +99,8 @@ if [[ $method != "raw" ]] && [[ $method != "bam" ]] && [[ $method != "bam_fast" 
     exit 1
 fi
 
-if [[ $species != "hg38" ]] && [[ $species != "mm10" ]] && [[ $method == "raw" ]]; then
-    echo "Error: species should be either hg38 (for human) or mm10 (for mouse)." >&2
+if [[ $species != "hg38" ]] && [[ $species != "mm10" ]] && [[ $species != "ce10" ]] && [[ $species != "dm3" ]] && [[ $species != "TAIR10" ]] && [[ $method == "raw" ]]; then
+    echo "Error: species should be either hg38 (for human), mm10 (for mouse), ce10 (for C. elegans), TAIR10 (for A. thaliana) or dm3 (for D. melanogaster)." >&2
     exit 1
 fi
 

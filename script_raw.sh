@@ -199,32 +199,35 @@ rm tmp.txt
 cat tmp_srt.txt | awk 'BEGIN{line="";m=0} //{if(line!=$0){if(NR>1){print line > "tmp_pair1.txt"; m=m+1}; line=$0}} END{print m > "all_count.txt"}'
 rm tmp_srt.txt
 
-# Checking if there are enough valid read pairs
+# Checking if there are enough valid read pairs - not used anymore -
 
-n=`cat all_count.txt`
-if (( $n<30000000 )); then
-    >&2 echo "Error, too low number of mapped reads in the library."
-    rm -r $tmp
-    rm -r $workdir
-    exit 1
-fi
+#n=`cat all_count.txt`
+#if (( $n<30000000 )); then
+#    >&2 echo "Error, too low number of mapped reads in the library."
+#    rm -r $tmp
+#    rm -r $workdir
+#    exit 1
+#fi
 
 # Splitting the read file to maximise cpus use
 
 >&2 echo -e "\tSubsampling read pairs"
 split -a 5 -l 10000000 tmp_pair1.txt tmp_pair1_split_
 
-# Generating subsamples tag files for 20M (low) valid read pairs, intermediate (mid) (mean between 20M and the total) and total mapped pairs (all)
+# Generating subsamples tag files for 20M (low) valid read pairs, intermediate (mid) (mean between 20M and the total) and total mapped pairs (all) - modified: using 1/3, 2/3 and total mapped pairs
 
-mid=`echo "(${n}+20000000)/2" | bc`
-s1=`echo "scale=2; 20000000/${n}" | bc`
-s2=`echo "scale= 2; ${mid}/${n}" | bc`
+#mid=`echo "(${n}+20000000)/2" | bc`
+#s1=`echo "scale=2; 20000000/${n}" | bc`
+#s2=`echo "scale= 2; ${mid}/${n}" | bc`
+s1=0.33
+s2=0.66
 
 for file in tmp_pair1_split_[a-z][a-z][a-z][a-z][a-z]; do
     echo "cat $file | awk -v name=${file} -v s1=$s1 -v s2=$s2 'BEGIN{FS=\"+\"; l=0; m=0; srand()} //{print \$1\"\t\"\$2\"\t\"\$2+100 >> (name \"_all.bed\"); print \$3\"\t\"\$4\"\t\"\$4+100 >> (name \"_all.bed\"); if(rand()<s1){print \$1\"\t\"\$2\"\t\"\$2+100 >> (name \"_low.bed\"); print \$3\"\t\"\$4\"\t\"\$4+100 >> (name \"_low.bed\"); l=l+1}; if(rand()<s2){print \$1\"\t\"\$2\"\t\"\$2+100 > (name \"_mid.bed\"); print \$3\"\t\"\$4\"\t\"\$4+100 >> (name \"_mid.bed\"); m=m+1}} END{print l > (name \"_low_count.txt\"); print m > (name \"_mid_count.txt\")}'" >> parallel.sh
 done
 
-cat parallel.sh | xargs -P $processors -L 1 -0 bash -c
+#cat parallel.sh | xargs -P $processors -L 1 -0 bash -c # corrected:
+cat parallel.sh | xargs -P $processors -L 1 -I CMD bash -c CMD
 rm parallel.sh
 
 # Merging the sub-sampled splitted files
