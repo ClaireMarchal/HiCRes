@@ -153,7 +153,7 @@ if (( $n==5 )); then
     res=`echo "( 1000 - $coef_4 - ( $coef_3 * $s ) ) / ( ( $coef_1 * $s ) - $coef_2 )" | bc`
     echo "************************************************************"
     echo ""
-    echo "The resolution of your libary is "$res" bp."
+    echo "The resolution of your libary is "$res" bp (using all interactions)."
     echo ""
     Rscript $script_calcR $coef_1 $coef_2 $coef_3 $coef_4 ${finalpredictdir}/prediction.txt
 else

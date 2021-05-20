@@ -92,11 +92,12 @@ fi
 
 # Extracting the  mapping and valid reads percentages
 
-echo -e "Raw_pairs\tPerc_map\tPerc_valid\tPerc_cis" > ${figuresdir}/hicup_stats.txt
+echo -e "Raw_pairs\tPerc_map\tPerc_valid\tPerc_cis\tperc_cis_far" > ${figuresdir}/hicup_stats.txt
 perc_map=`cat ${hicupdir}/hicup_out/HiCUP_summary_report_*.txt | awk 'BEGIN{n=0;l=0} !/^File/{n=n+$32; l=l+1} END{print n/l}'`
 perc_valid=`cat ${hicupdir}/hicup_out/HiCUP_summary_report_*.txt | awk 'BEGIN{n=0;l=0} !/^File/{n=n+$33; l=l+1} END{print n/l}'`
 perc_cis=`cat ${hicupdir}/hicup_out/HiCUP_summary_report_*.txt | awk 'BEGIN{n=0;l=0} !/^File/{n=n+$35; l=l+1} END{print 100-(n/l)}'`
-echo -e "Total\t"$perc_map"\t"$perc_valid"\t"$perc_cis >> ${figuresdir}/hicup_stats.txt
+perc_cis_far=`cat ${hicupdir}/hicup_out/HiCUP_summary_report_*.txt | awk 'BEGIN{n=0;l=0} !/^File/{n=n+($30/$28); l=l+1} END{print 100-(n/l)}'`
+echo -e "Total\t"$perc_map"\t"$perc_valid"\t"$perc_cis"\t"$perc_cis_far >> ${figuresdir}/hicup_stats.txt
 
 if (( $(echo "$perc_map<50" | bc -l) )); then
     >&2 echo "Error: too low percentage of reads mapped ("$perc_map"%)."
@@ -348,16 +349,20 @@ if (( $n==5 )); then
     perc_mapp=`cat ${figuresdir}/hicup_stats.txt | awk '/^Total/{print $2}'`
     perc_valid=`cat ${figuresdir}/hicup_stats.txt | awk '/^Total/{print $3}'`
     perc_cis=`cat ${figuresdir}/hicup_stats.txt | awk '/^Total/{print $4}'`
+    per_cis_far=`cat ${figuresdir}/hicup_stats.txt | awk '/^Total/{print $5}'`
     s=`cat ${preseqdir}/all_count.txt`
-    res=`echo "( 1000 - $coef_4 - ( $coef_3 * $s ) ) / ( ( $coef_1 * $s ) - $coef_2 )" | bc`
+    res=`echo "(((1000)^(1/3) - $coef_4 - $coef_3 * ($s)^(1/3)) / ($coef_1 * ($s)^(1/3) + $coef_2))^3" | bc`
+    res_cis=`echo "(((1000)^(1/3) - $coef_4 - $coef_3 * ($s * $perc_cis / 100)^(1/3)) / ($coef_1 * ($s * $perc_cis / 100)^(1/3) + $coef_2))^3" | bc`
+    res_cis_far=`echo "(((1000)^(1/3) - $coef_4 - $coef_3 * ($s * $perc_cis_far / 100)^(1/3)) / ($coef_1 * ($s * $perc_cis_far / 100)^(1/3) + $coef_2))^3" | bc`
+    #res=`echo "( 1000 - $coef_4 - ( $coef_3 * $s ) ) / ( ( $coef_1 * $s ) - $coef_2 )" | bc`
     echo "************************************************************"
     echo ""
-    echo "The resolution of your libary is "$res" bp."
+    echo "The resolution of your libary is "$res" bp (using all interactions), "$res_cis" bp (using cis interactions only) or "$res_cis_far" bp (using cis-far interactions only)."
     echo ""
     if (( $preseq_out==0)); then
-	Rscript $script_calcR $coef_1 $coef_2 $coef_3 $coef_4 $perc_mapp $perc_valid $perc_cis ${figuresdir}/preseq_100M_raw_pairs.txt ${finalpredictdir}/prediction.txt
+	Rscript $script_calcR $coef_1 $coef_2 $coef_3 $coef_4 $perc_mapp $perc_valid $perc_cis $perc_cis_far ${figuresdir}/preseq_100M_raw_pairs.txt ${finalpredictdir}/prediction.txt
     else
-	Rscript $script_calcR_no_preseq $coef_1 $coef_2 $coef_3 $coef_4 $perc_mapp $perc_valid $perc_cis ${finalpredictdir}/prediction.txt
+	Rscript $script_calcR_no_preseq $coef_1 $coef_2 $coef_3 $coef_4 $perc_mapp $perc_valid $perc_cis $perc_cis_far ${finalpredictdir}/prediction.txt
     fi
 else
     >&2 echo "error, no prediction computed"
