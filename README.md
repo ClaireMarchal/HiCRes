@@ -13,7 +13,7 @@ The purpose of this container is to estimate the resolution of your HiC library 
 
 #### Starting from fastq files
 
-`docker run --rm -v /Path/To/Your/Fastq/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
+`docker run --rm -v /Path/To/Your/Fastq/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres:v1.1 -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
 
 This command will run hicres on your library "sample", using human genome, MboI digestion and using 40 threads. It will look for your fastq files within /Path/To/Your/Fastq/Folder and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
 
@@ -21,7 +21,7 @@ Tip: You can start from a subsampled library (100M read pairs) for faster result
 
 #### Starting from bam of valid interactions
 
-`docker run --rm -v /Path/To/Your/Files/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
+`docker run --rm -v /Path/To/Your/Files/Folder:/home/input:ro -v /Path/To/The/Ouput/Folder:/home/output:rw marchalc/hicres:v1.1 -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
 
 This command will run hicres on bam file located in /Path/To/Your/Files/Folder and will look for the chrom.sizes file corresponding to the genome you used within /Path/To/Your/Files/Folder. It will use 40 threads and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
 
@@ -29,14 +29,14 @@ This command will run hicres on bam file located in /Path/To/Your/Files/Folder a
 
 #### Starting from fastq files
 
-`singularity run --bind /Path/To/Your/Fastq/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
+`singularity run --bind /Path/To/Your/Fastq/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres:v1.1 -m raw -t 40 -e MboI -1 sample_R1.fastq -2 sample_R2.fastq -s hg38`
 This command will run hicres on your library "sample", using human genome, MboI digestion and using 40 threads. It will look for your fastq files within /Path/To/Your/Fastq/Folder and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
 
 Tip: You can start from a subsampled library (100M read pairs) for faster results.
 
 #### Starting from bam of valid interactions
 
-`singularity run --bind /Path/To/Your/Files/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
+`singularity run --bind /Path/To/Your/Files/Folder:/home/input --bind /Path/To/The/Ouput/Folder:/home/output docker://marchalc/hicres:v1.1 -m bam -t 40 -c your_genome.chrom.sizes -b your_valid_interactions.bam`
 
 This command will run hicres on bam file located in /Path/To/Your/Files/Folder and will look for the chrom.sizes file corresponding to the genome you used within /Path/To/Your/Files/Folder. It will use 40 threads and will stock large temporary files and output the results within /Path/To/The/Ouput/Folder.
 
