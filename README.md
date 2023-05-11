@@ -306,7 +306,7 @@ ce10.rev.2.bt2
 
 Please cite the paper associated to this tool if you use it:
 
-The citation will be updated here when the paper will be published.
+Claire Marchal, Nivedita Singh, Ximena Corso-Díaz, Anand Swaroop, HiCRes: a computational method to estimate and predict the genomic resolution of Hi-C libraries, Nucleic Acids Research, Volume 50, Issue 6, 8 April 2022, Page e35, https://doi.org/10.1093/nar/gkab1235
 
 This tool uses also:
 
